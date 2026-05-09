@@ -125,7 +125,7 @@ function renderLookup(id) {
         <div>
           <h3>Punk #${id}</h3>
           <p><a href="${cpDetails}" rel="noopener" target="_blank">View on cryptopunks.app →</a></p>
-          ${sameWallet ? `<p class="same-wallet">V1 and V2 are held by the same wallet.</p>` : ""}
+          ${sameWallet ? `<p class="same-wallet"><span class="paired-badge"><span class="paired-badge__icon" aria-hidden="true">🤝</span>PAIRED!</span> V1 and V2 are held by the same wallet.</p>` : ""}
         </div>
       </header>
       <div class="punk-card__tokens">

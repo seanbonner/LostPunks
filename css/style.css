@@ -202,6 +202,22 @@ button:hover { background: var(--accent); }
 .punk-card__head h3 { margin: 0 0 4px; font-size: 24px; }
 .same-wallet { color: var(--accent); font-weight: 500; }
 
+.paired-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.paired-badge__icon { font-size: 14px; line-height: 1; }
+
 .punk-card__tokens {
   display: grid;
   grid-template-columns: 1fr 1fr;
