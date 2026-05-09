@@ -1,0 +1,15 @@
+{
+  "name": "lostpunks",
+  "version": "0.0.1",
+  "description": "Static site for lostpunks.com — find CryptoPunks sitting in long-dormant wallets.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "npm run sync-data && eleventy",
+    "serve": "npm run sync-data && eleventy --serve",
+    "sync-data": "node scripts/sync-data.mjs"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0"
+  }
+}

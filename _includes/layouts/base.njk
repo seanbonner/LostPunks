@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+<meta name="description" content="{{ description or site.description }}">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="{{ bodyClass or '' }}">
+<header class="site-header">
+  <a class="site-header__logo" href="/">{{ site.title }}</a>
+  <nav class="site-nav" aria-label="Primary">
+    <ul>
+      <li><a href="/about/"{% if page.url == "/about/" %} aria-current="page"{% endif %}>About</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+{{ content | safe }}
+</main>
+
+<footer class="site-footer">
+  <p>
+    Lost Punks is a project by <a href="http://seanbonner.com/">Sean Bonner</a>, published under a <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY 4.0 License</a>. You may also enjoy <a href="{{ site.burnedPunksUrl }}">Burned Punks</a> and <a href="{{ site.museumPunksUrl }}">Museum Punks</a>.
+  </p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,79 @@
+---
+layout: layouts/base.njk
+permalink: /
+---
+
+<section class="hero">
+  <h1>Lost Punks</h1>
+  <p class="tagline">CryptoPunks sitting in long-dormant wallets. Use your own definition of <em>lost</em>.</p>
+  <p class="headline">
+    At a 5-year / 5-year threshold,
+    <strong>{{ punks.lostAt5y5y.v2 }}</strong> V2 punks
+    and <strong>{{ punks.lostAt5y5y.v1 }}</strong> V1 punks
+    look lost right now.
+  </p>
+</section>
+
+<section class="lookup-section">
+  <h2>Look up a punk</h2>
+  <form id="lookup-form" autocomplete="off">
+    <label for="lookup-id">Punk number (0–9999)</label>
+    <input type="number" id="lookup-id" min="0" max="9999" required>
+    <button type="submit">Go</button>
+  </form>
+  <div id="lookup-result" hidden></div>
+</section>
+
+<section class="search-section">
+  <h2>Search for lost punks</h2>
+  <form id="search-form">
+    <fieldset class="contract-picker">
+      <legend>Contract</legend>
+      <label><input type="radio" name="contract" value="v2" checked> V2</label>
+      <label><input type="radio" name="contract" value="v1"> V1</label>
+    </fieldset>
+
+    <div class="slider-row">
+      <label for="punk-years">Punk hasn&rsquo;t moved in at least</label>
+      <input type="range" id="punk-years" min="3" max="9" step="1" value="5">
+      <output for="punk-years" id="punk-years-out">5 years</output>
+    </div>
+
+    <div class="slider-row">
+      <label for="wallet-years">Wallet hasn&rsquo;t signed any outbound transaction in at least</label>
+      <input type="range" id="wallet-years" min="3" max="9" step="1" value="5">
+      <output for="wallet-years" id="wallet-years-out">5 years</output>
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="exclude-no-outbound">
+      Exclude wallets that have never sent an outbound transaction (vault-style wallets)
+    </label>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="include-vaulted">
+      Include known vaults (e.g. 6529museum.eth) in results
+    </label>
+
+    <button type="submit">Search</button>
+  </form>
+
+  <p class="caveat">
+    &ldquo;Wallet activity&rdquo; here means any outbound Ethereum transaction signed by the holder wallet
+    &mdash; not just punks-related activity. Known burned punks
+    (<a href="{{ site.burnedPunksUrl }}">tracked here</a>) are excluded from results.
+  </p>
+
+  <div id="search-result" hidden></div>
+</section>
+
+<script>
+  window.SITE = {
+    imageBase: {{ site.imageBase | dump | safe }},
+    cryptopunksDetailsBase: {{ site.cryptopunksDetailsBase | dump | safe }},
+    cryptopunksAccountBase: {{ site.cryptopunksAccountBase | dump | safe }},
+    etherscanAddressBase: {{ site.etherscanAddressBase | dump | safe }},
+    burnedPunksUrl: {{ site.burnedPunksUrl | dump | safe }},
+  };
+</script>
+<script src="/js/search.js" type="module"></script>
