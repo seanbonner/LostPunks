@@ -1,0 +1,20 @@
+---
+layout: layouts/base.njk
+permalink: /lookup/
+title: Look up a punk
+---
+
+<div class="page-wrap">
+  <h1>Look up a punk</h1>
+  <p class="page-wrap__intro">Enter a punk number (0–9999) to see V1 and V2 status, holder wallet, and movement history.</p>
+
+  <form id="lookup-form" autocomplete="off">
+    <label for="lookup-id">Punk number</label>
+    <input type="number" id="lookup-id" min="0" max="9999" required>
+    <button type="submit">Go</button>
+  </form>
+
+  <div id="lookup-result" hidden></div>
+</div>
+
+<script src="/js/lookup.js" type="module"></script>

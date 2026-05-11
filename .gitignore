@@ -35,3 +35,6 @@ Desktop.ini
 node_modules/
 _site/
 .cache/
+
+# Superpowers brainstorming session files
+.superpowers/

@@ -2,6 +2,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("css");
   eleventyConfig.addPassthroughCopy("js");
   eleventyConfig.addPassthroughCopy("images");
+  eleventyConfig.ignores.add("docs/**");
 
   eleventyConfig.addFilter("shortWallet", (wallet) => {
     if (!wallet || typeof wallet !== "string") return "";

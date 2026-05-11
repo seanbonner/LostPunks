@@ -6,9 +6,16 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import labels from "./labels.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE = join(__dirname, "cached");
+
+function isVaultedAddr(addr) {
+  if (!addr) return false;
+  const e = labels[addr.toLowerCase()];
+  return typeof e === "object" && e?.vault === true;
+}
 
 export default function () {
   const holders = JSON.parse(readFileSync(join(CACHE, "holders.json"), "utf8"));
@@ -44,6 +51,21 @@ export default function () {
     }
   }
 
+  // Top V2 punks dormant the longest, excluding burned and known vaults.
+  // Used for the homepage mosaic. Sized to fill 9 rows even on very wide
+  // viewports (~40 cols at 4K → 360 tiles); CSS clips to 9 rows so the
+  // overflow tiles never display.
+  const v2Candidates = [];
+  for (const idStr of Object.keys(holders.v2)) {
+    const id = Number(idStr);
+    if (burnedIds.has(id)) continue;
+    const info = holders.v2[idStr];
+    if (isVaultedAddr(info.holder)) continue;
+    v2Candidates.push({ id, lastMoveTs: info.lastMoveTs });
+  }
+  v2Candidates.sort((a, b) => a.lastMoveTs - b.lastMoveTs);
+  const topDormant = { v2: v2Candidates.slice(0, 360).map((p) => p.id) };
+
   const syncedAtDisplay = syncedAt
     ? new Date(syncedAt * 1000).toLocaleDateString("en-US", {
         year: "numeric",
@@ -60,5 +82,6 @@ export default function () {
     wallets,
     burnedIds: [...burnedIds].sort((a, b) => a - b),
     lostAt5y5y,
+    topDormant,
   };
 }

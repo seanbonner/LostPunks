@@ -1,0 +1,48 @@
+---
+layout: layouts/base.njk
+permalink: /search/
+title: Search by threshold
+---
+
+<div class="page-wrap">
+  <h1>Search by dormancy</h1>
+  <p class="page-wrap__intro">Find punks held in long-dormant wallets. Adjust the thresholds to match your own definition of "lost." Generally longer times mean highly likelihood the punk is lost. Click any punk in the results to see more details.</p>
+
+  <p class="page-wrap__note">* Known <a href="{{ site.burnedPunksUrl }}">Burned Punks</a> are excluded from these results.</p>
+
+  <form id="search-form">
+    <fieldset class="contract-picker">
+      <legend>Contract</legend>
+      <label><input type="radio" name="contract" value="v2" checked> V2</label>
+      <label><input type="radio" name="contract" value="v1"> V1</label>
+    </fieldset>
+
+    <div class="slider-row">
+      <label for="punk-years">Punk hasn&rsquo;t moved in at least</label>
+      <input type="range" id="punk-years" min="3" max="9" step="1" value="5">
+      <output for="punk-years" id="punk-years-out">5 years</output>
+    </div>
+
+    <div class="slider-row">
+      <label for="wallet-years">Wallet hasn&rsquo;t signed any outbound transaction in at least</label>
+      <input type="range" id="wallet-years" min="3" max="9" step="1" value="5">
+      <output for="wallet-years" id="wallet-years-out">5 years</output>
+    </div>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="exclude-no-outbound">
+      Exclude wallets that have never sent an outbound transaction (vault-style wallets)
+    </label>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="include-vaulted">
+      Include known vaults (e.g. 6529museum.eth) in results
+    </label>
+
+    <button type="submit">Search</button>
+  </form>
+
+  <div id="search-result" hidden></div>
+</div>
+
+<script src="/js/search.js" type="module"></script>

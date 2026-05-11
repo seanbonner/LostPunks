@@ -1,79 +1,61 @@
 ---
 layout: layouts/base.njk
 permalink: /
+bodyClass: home
 ---
 
-<section class="hero">
-  <h1>Lost Punks</h1>
-  <p class="tagline">CryptoPunks sitting in long-dormant wallets. Use your own definition of <em>lost</em>.</p>
-  <p class="headline">
-    At a 5-year / 5-year threshold,
-    <strong>{{ punks.lostAt5y5y.v2 }}</strong> V2 punks
-    and <strong>{{ punks.lostAt5y5y.v1 }}</strong> V1 punks
-    look lost right now.
-  </p>
-</section>
+<section class="home-hero">
+  <div class="home-hero__header">
+    <a class="home-hero__logo" href="/" aria-label="Lost Punks">
+      <img src="/images/logos/lostpunks.gif" alt="Lost Punks">
+    </a>
 
-<section class="lookup-section">
-  <h2>Look up a punk</h2>
-  <form id="lookup-form" autocomplete="off">
-    <label for="lookup-id">Punk number (0–9999)</label>
-    <input type="number" id="lookup-id" min="0" max="9999" required>
-    <button type="submit">Go</button>
-  </form>
-  <div id="lookup-result" hidden></div>
-</section>
+    <p class="home-hero__headline">
+      Forgotten wallets. Misplaced seedphrases. Hundreds of CryptoPunks might be lost forever&hellip; but which ones?
+    </p>
 
-<section class="search-section">
-  <h2>Search for lost punks</h2>
-  <form id="search-form">
-    <fieldset class="contract-picker">
-      <legend>Contract</legend>
-      <label><input type="radio" name="contract" value="v2" checked> V2</label>
-      <label><input type="radio" name="contract" value="v1"> V1</label>
-    </fieldset>
+    <p class="entry-links">
+      <a href="/lookup/">Look up a punk →</a>
+      <a href="/search/">Search by threshold →</a>
+    </p>
+  </div>
 
-    <div class="slider-row">
-      <label for="punk-years">Punk hasn&rsquo;t moved in at least</label>
-      <input type="range" id="punk-years" min="3" max="9" step="1" value="5">
-      <output for="punk-years" id="punk-years-out">5 years</output>
+  <div class="mosaic">
+    <div class="mosaic__grid">
+      {%- set tileTotal = punks.topDormant.v2 | length -%}
+      {% for id in punks.topDormant.v2 %}
+        {%- set fade = 0.02 + (loop.index0 / (tileTotal - 1)) * 0.98 -%}
+        <a class="mosaic__tile" href="/lookup/?punk={{ id }}" aria-label="Punk {{ id }}" style="--tile-fade: {{ fade }}">
+          <img class="mosaic__tile-img" src="{{ site.imageBase }}{{ id }}/image?transparent=true&bg=ffffff" alt="" loading="lazy" width="96" height="96">
+        </a>
+      {% endfor %}
     </div>
-
-    <div class="slider-row">
-      <label for="wallet-years">Wallet hasn&rsquo;t signed any outbound transaction in at least</label>
-      <input type="range" id="wallet-years" min="3" max="9" step="1" value="5">
-      <output for="wallet-years" id="wallet-years-out">5 years</output>
-    </div>
-
-    <label class="checkbox-row">
-      <input type="checkbox" id="exclude-no-outbound">
-      Exclude wallets that have never sent an outbound transaction (vault-style wallets)
-    </label>
-
-    <label class="checkbox-row">
-      <input type="checkbox" id="include-vaulted">
-      Include known vaults (e.g. 6529museum.eth) in results
-    </label>
-
-    <button type="submit">Search</button>
-  </form>
-
-  <p class="caveat">
-    &ldquo;Wallet activity&rdquo; here means any outbound Ethereum transaction signed by the holder wallet
-    &mdash; not just punks-related activity. Known burned punks
-    (<a href="{{ site.burnedPunksUrl }}">tracked here</a>) are excluded from results.
-  </p>
-
-  <div id="search-result" hidden></div>
+  </div>
 </section>
 
 <script>
-  window.SITE = {
-    imageBase: {{ site.imageBase | dump | safe }},
-    cryptopunksDetailsBase: {{ site.cryptopunksDetailsBase | dump | safe }},
-    cryptopunksAccountBase: {{ site.cryptopunksAccountBase | dump | safe }},
-    etherscanAddressBase: {{ site.etherscanAddressBase | dump | safe }},
-    burnedPunksUrl: {{ site.burnedPunksUrl | dump | safe }},
-  };
+  // Crop the mosaic to exactly 9 rows by detecting row breaks via offsetTop.
+  (function () {
+    const grid = document.querySelector(".mosaic__grid");
+    if (!grid) return;
+    const tiles = Array.from(grid.children);
+    const ROWS = 9;
+    function trim() {
+      tiles.forEach((t) => { t.hidden = false; });
+      let rowCount = 1;
+      let cutoff = tiles.length;
+      let prevTop = tiles[0].offsetTop;
+      for (let i = 1; i < tiles.length; i++) {
+        const top = tiles[i].offsetTop;
+        if (top !== prevTop) {
+          rowCount++;
+          prevTop = top;
+          if (rowCount > ROWS) { cutoff = i; break; }
+        }
+      }
+      for (let i = cutoff; i < tiles.length; i++) tiles[i].hidden = true;
+    }
+    trim();
+    window.addEventListener("resize", trim);
+  })();
 </script>
-<script src="/js/search.js" type="module"></script>
