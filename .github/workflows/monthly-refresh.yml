@@ -1,0 +1,109 @@
+name: Monthly data refresh
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Checkout LostPunks
+        uses: actions/checkout@v4
+        with:
+          path: LostPunks
+
+      - name: Checkout PunksData
+        uses: actions/checkout@v4
+        with:
+          repository: seanbonner/PunksData
+          path: punk-data
+          token: ${{ secrets.PUNKSDATA_PUSH_TOKEN }}
+
+      - name: Checkout BurnedPunks
+        uses: actions/checkout@v4
+        with:
+          repository: seanbonner/BurnedPunks
+          path: BurnedPunks
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Configure git committer
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Install punk-data deps
+        working-directory: punk-data
+        run: npm ci
+
+      - name: Refresh V2 transaction archive
+        working-directory: punk-data
+        env:
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: npm run fetch
+
+      - name: Refresh V1 archive
+        working-directory: punk-data
+        env:
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: npm run fetch-v1
+
+      - name: Refresh V1 wrapped archive
+        working-directory: punk-data
+        env:
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: npm run fetch-v1-wrapped
+
+      - name: Refresh V2 assigns archive
+        working-directory: punk-data
+        env:
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: npm run fetch-v2-assigns
+
+      - name: Compute holders
+        working-directory: punk-data
+        run: npm run compute-holders
+
+      - name: Refresh wallet activity (full re-query)
+        working-directory: punk-data
+        env:
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: node scripts/fetch-wallet-activity.mjs --refresh
+
+      - name: Commit + push PunksData
+        working-directory: punk-data
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add -A
+            git commit -m "Monthly refresh $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "no PunksData changes"
+          fi
+
+      - name: Install LostPunks deps
+        working-directory: LostPunks
+        run: npm ci
+
+      - name: Sync data into LostPunks cache
+        working-directory: LostPunks
+        run: npm run sync-data
+
+      - name: Commit + push LostPunks
+        working-directory: LostPunks
+        run: |
+          if [ -n "$(git status --porcelain _data/cached)" ]; then
+            git add _data/cached
+            git commit -m "Monthly data refresh $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "no LostPunks cache changes"
+          fi
