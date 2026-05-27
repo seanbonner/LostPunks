@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% if title %}{{ title }} — {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
 <meta name="description" content="{{ description or site.description }}">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/style.css?v={{ assetVersion }}">
 <script>
   window.SITE = {
     imageBase: {{ site.imageBase | dump | safe }},
@@ -20,6 +20,9 @@
     punksMarketBase: {{ site.punksMarketBase | dump | safe }},
     v1cryptopunksBase: {{ site.v1cryptopunksBase | dump | safe }},
   };
+</script>
+<script type="importmap">
+{ "imports": { "punks-lib": "/js/lib.js?v={{ assetVersion }}" } }
 </script>
 </head>
 <body class="{{ bodyClass or '' }}">

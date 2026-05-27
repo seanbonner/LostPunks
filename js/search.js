@@ -1,6 +1,6 @@
 // Search page: threshold-based search. Result tiles link to /lookup/?punk=N.
 
-import { loadData, YEAR_SEC, yearsAgo, imgUrl, isVaultedAddress } from "/js/lib.js";
+import { loadData, YEAR_SEC, yearsAgo, imgUrl, isVaultedAddress } from "punks-lib";
 
 const $ = (sel) => document.querySelector(sel);
 

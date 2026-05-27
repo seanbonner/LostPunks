@@ -1,6 +1,6 @@
 // Lookup page: single-punk render, form binding, deep-link via ?punk=N.
 
-import { loadData, imgUrl, tokenCard } from "/js/lib.js";
+import { loadData, imgUrl, tokenCard } from "punks-lib";
 
 const $ = (sel) => document.querySelector(sel);
 
