@@ -392,6 +392,8 @@ button:hover { background: #000; }
 .token-card p { margin: 4px 0; }
 .token-card a { color: var(--accent); }
 .token-card a:hover { text-decoration: underline; }
+.token-card__view { margin: 6px 0 10px; }
+.token-card__view .v1links { color: #888; white-space: nowrap; }
 
 .burned-note {
   margin-top: 12px;

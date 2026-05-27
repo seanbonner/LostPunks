@@ -51,7 +51,7 @@ export function walletLine(data, addr, walletTs, now) {
   const detail = walletTs
     ? `last outbound ${fmtDate(walletTs)} (${ya} years ago)`
     : `no outbound transactions ever`;
-  const link = `${SITE.etherscanAddressBase}${addr}`;
+  const link = `${SITE.evmNowAddressBase}${addr}`;
   const entry = labelEntry(data, addr);
   const display = entry
     ? `<strong>${entry.label}</strong> (${shortAddr(addr)})`
@@ -95,6 +95,7 @@ export function tokenCard(data, label, info, walletTs, now, opts = {}) {
     <div class="token-card">
       <h4>${label} <span class="status-badge ${status.cls}">${status.label}</span></h4>
       <p class="token-card__status">${wrapStatus}</p>
+      ${opts.viewLinks || ""}
       <p>${moveLine(info, opts.verb || "moved", data.builtAt)}</p>
       <p>${walletLine(data, info.holder, walletTs, now)}.</p>
       ${burnedNote}
