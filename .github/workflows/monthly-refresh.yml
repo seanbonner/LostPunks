@@ -107,3 +107,31 @@ jobs:
           else
             echo "no LostPunks cache changes"
           fi
+
+      - name: Checkout MuseumPunks
+        uses: actions/checkout@v4
+        with:
+          repository: seanbonner/MuseumPunks
+          path: MuseumPunks
+
+      - name: Checkout PunksPunksPunks
+        uses: actions/checkout@v4
+        with:
+          repository: seanbonner/PunksPunksPunks
+          path: PunksPunksPunks
+          token: ${{ secrets.PUNKSDATA_PUSH_TOKEN }}
+
+      - name: Sync data into hub cache
+        working-directory: PunksPunksPunks
+        run: npm run sync-data
+
+      - name: Commit + push PunksPunksPunks
+        working-directory: PunksPunksPunks
+        run: |
+          if [ -n "$(git status --porcelain _data/cached)" ]; then
+            git add _data/cached
+            git commit -m "Monthly data refresh $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "no hub cache changes"
+          fi
