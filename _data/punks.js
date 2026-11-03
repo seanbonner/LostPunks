@@ -42,7 +42,9 @@ export default function () {
   for (const c of ["v1", "v2"]) {
     for (const id of Object.keys(holders[c])) {
       const h = holders[c][id];
-      if (burnedIds.has(Number(id))) continue;
+      // The BurnedPunks registry lists burned V2 tokens. The V1 token with the
+      // same id is a separate asset and is still a valid lost candidate.
+      if (c === "v2" && burnedIds.has(Number(id))) continue;
       const walletTs = wallets[h.holder];
       const walletAge = walletTs ?? 0; // null treated as never → very old
       if (h.lastMoveTs <= FIVE_YEARS_AGO && walletAge <= FIVE_YEARS_AGO) {

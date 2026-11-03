@@ -13,7 +13,8 @@ function runSearch(data, { contract, punkYears, walletYears, excludeNoOutbound, 
   const matches = [];
   for (const idStr of Object.keys(map)) {
     const id = Number(idStr);
-    if (burnedSet.has(id)) continue;
+    // Burned ids are V2 tokens only; never drop the V1 token sharing the id.
+    if (contract === "v2" && burnedSet.has(id)) continue;
     const info = map[idStr];
     if (info.lastMoveTs > punkCutoff) continue;
     if (!includeVaulted && isVaultedAddress(data, info.holder)) continue;

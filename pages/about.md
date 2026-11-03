@@ -18,7 +18,7 @@ Lost Punks indexes both contracts. The V1 contract (where claims happened in Jun
 ## What this isn&rsquo;t
 
 - **It&rsquo;s not a claim that any specific punk is lost forever.** A wallet that&rsquo;s been silent for 8 years could still be operated by someone who simply hasn&rsquo;t needed to move anything.
-- **It doesn&rsquo;t count punks already known to be burned.** Those are documented on [Burned Punks]({{ site.burnedPunksUrl }}) and are excluded from results here.
+- **It doesn&rsquo;t count V2 punks already known to be burned.** Those are documented on [Burned Punks]({{ site.burnedPunksUrl }}) and are excluded from V2 results here. The V1 token with the same number is a separate asset and is still included.
 - **It only knows about Ethereum activity.** A wallet&rsquo;s last outbound transaction is the strongest signal we have without inferring intent.
 
 ## How fresh is the data?
